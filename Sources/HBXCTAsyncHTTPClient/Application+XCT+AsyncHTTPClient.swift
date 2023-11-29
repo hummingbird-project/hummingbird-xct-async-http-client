@@ -7,14 +7,9 @@ public enum XCTAHCTestingSetup {
     case ahc
 }
 
-/// Extends `HBApplication` to support testing of applications
+/// Extends `HBApplication` to support testing of applications with AsyncHTTPClient
 ///
-/// You use `XCTStart`, `XCTStop` and `XCTExecute` to run test applications. You can either create an
-/// "embedded" application which uses the `EmbeddedChannel` for testing your code or a "live" application.
-/// An "embedded" application test is quicker and doesn't require setting up a full server but if you code is reliant
-/// on multi-threading it will fail. In that situation you should use a "live" application which will setup a local server.
-///
-/// The example below is using the `.embedded` framework to test
+/// You use `XCTStart`, `XCTStop` and `XCTExecute` to run test applications.
 /// ```
 /// let app = HBApplication(testing: .ahc)
 /// app.router.get("/hello") { _ in
@@ -35,8 +30,9 @@ extension HBApplication {
     /// Creates a version of `HBApplication` that can be used for testing code
     ///
     /// - Parameters:
-    ///   - testing: indicates which type of testing framework we want
+    ///   - testing: indicates we want to test with AsyncHTTPClient
     ///   - configuration: configuration of application
+    ///   - clientConfiguration: HTTPClient configuration setup
     public convenience init(
         testing: XCTAHCTestingSetup, 
         configuration: HBApplication.Configuration = .init(), 
