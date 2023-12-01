@@ -4,7 +4,7 @@ import XCTest
 
 final class HBXCTAsyncHTTPClientTests: XCTestCase {
     func testGet() throws {
-        let app = HBApplication(testing: .ahc)
+        let app = HBApplication(testing: .ahc(scheme: .http))
         app.router.get("/hello") { request -> EventLoopFuture<ByteBuffer> in
             let buffer = request.allocator.buffer(string: "GET: Hello")
             return request.eventLoop.makeSucceededFuture(buffer)
@@ -21,7 +21,7 @@ final class HBXCTAsyncHTTPClientTests: XCTestCase {
     }
 
     func testLeadingSlash() throws {
-        let app = HBApplication(testing: .ahc)
+        let app = HBApplication(testing: .ahc(scheme: .http))
         app.router.get("/hello") { request -> EventLoopFuture<ByteBuffer> in
             let buffer = request.allocator.buffer(string: "GET: Hello")
             return request.eventLoop.makeSucceededFuture(buffer)
@@ -44,7 +44,7 @@ final class HBXCTAsyncHTTPClientTests: XCTestCase {
     }
 
     func testStatus() throws {
-        let app = HBApplication(testing: .ahc)
+        let app = HBApplication(testing: .ahc(scheme: .http))
         app.router.put("/test") { request -> HTTPResponseStatus in
             return .imATeapot
         }
@@ -57,7 +57,7 @@ final class HBXCTAsyncHTTPClientTests: XCTestCase {
     }
 
     func testHeaders() throws {
-        let app = HBApplication(testing: .ahc)
+        let app = HBApplication(testing: .ahc(scheme: .http))
         app.router.post("/test") { request -> HBResponse in
             return .init(status: .ok, headers: ["output": request.headers["input"].first ?? ""])
         }
@@ -70,7 +70,7 @@ final class HBXCTAsyncHTTPClientTests: XCTestCase {
     }
 
     func testBody() throws {
-        let app = HBApplication(testing: .ahc)
+        let app = HBApplication(testing: .ahc(scheme: .http))
         app.router.put("/test/:string") { request -> String? in
             return request.parameters["string"]
         }

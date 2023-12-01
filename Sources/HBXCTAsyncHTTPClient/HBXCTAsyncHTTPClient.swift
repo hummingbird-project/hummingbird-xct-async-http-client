@@ -22,7 +22,8 @@ import XCTest
 
 /// Test using a live server and AsyncHTTPClient
 class HBXCTAsyncHTTPClient: HBXCT {
-    init(configuration: HTTPClient.Configuration) {
+    init(scheme: XCTAHCTestingSetup.Scheme, configuration: HTTPClient.Configuration) {
+        self.scheme = scheme.description
         self.client = HTTPClient(configuration: configuration)
     }
 
@@ -30,7 +31,7 @@ class HBXCTAsyncHTTPClient: HBXCT {
     func start(application: HBApplication) throws {
         do {
             try application.start()
-            self.baseURL = "http://localhost:\(application.server.port!)"
+            self.baseURL = "\(self.scheme)://localhost:\(application.server.port!)"
         } catch {
             try self.client.syncShutdown()
             throw error
@@ -72,6 +73,7 @@ class HBXCTAsyncHTTPClient: HBXCT {
     }
 
     var eventLoopGroup: EventLoopGroup { self.client.eventLoopGroup }
+    let scheme: String
     var baseURL: String?
     let client: HTTPClient
 }

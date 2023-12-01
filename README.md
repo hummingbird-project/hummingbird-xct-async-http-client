@@ -5,7 +5,7 @@ Test client for Hummingbird server framework that uses the swift server [AsyncHT
 Use this if you want to test things like TLS and HTTP2.
 
 ```swift
-let app = HBApplication(testing: .ahc)
+let app = HBApplication(testing: .ahc(scheme: .https))
 app.router.get("/hello") { request -> EventLoopFuture<ByteBuffer> in
     let buffer = request.allocator.buffer(string: "Hello")
     return request.eventLoop.makeSucceededFuture(buffer)

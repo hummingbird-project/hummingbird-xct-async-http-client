@@ -4,7 +4,18 @@ import HummingbirdXCT
 
 /// Type of test framework
 public enum XCTAHCTestingSetup {
-    case ahc
+    public enum Scheme: CustomStringConvertible {
+        case http
+        case https
+
+        public var description: String {
+            switch self {
+            case .http: return "http"
+            case .https: return "https"
+            }
+        }
+    }
+    case ahc(scheme: Scheme)
 }
 
 /// Extends `HBApplication` to support testing of applications with AsyncHTTPClient
@@ -41,8 +52,8 @@ extension HBApplication {
         let xct: HBXCT
         let configuration = configuration.with(address: .hostname("localhost", port: 0))
         switch testing {
-        case .ahc:
-            xct = HBXCTAsyncHTTPClient(configuration: clientConfiguration)
+        case .ahc(let scheme):
+            xct = HBXCTAsyncHTTPClient(scheme: scheme, configuration: clientConfiguration)
         }
         self.init(configuration: configuration, eventLoopGroupProvider: .shared(xct.eventLoopGroup))
         self.extensions.set(\.xct, value: xct)
